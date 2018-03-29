@@ -20,6 +20,8 @@ var cars = [
     '<li class="card"><i class="fa fa-cube"></i></li>'];
 var openCards=[];
 var moves = 0;
+var seconds=0;
+var timeCount;
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -29,7 +31,7 @@ var moves = 0;
 shuffle(cars).forEach(function (car) {
     $(".deck").append($(car));
 });
-
+startTime();
 function show() {
     this.className="card open show";
 }
@@ -79,10 +81,62 @@ function check() {
         }
         moves++;
         $(".moves").text(moves);
+        showStars();
     }
     if($(".match").length==cars.length){
-        alert("恭喜你，通关成功");
+        stopTime();
+        setTimeout(showSuccess(),500);
     }
+}
+
+/**
+ * start count use second time
+ */
+function startTime() {
+    $(".useTime").text(seconds);
+    seconds++;
+    console.log("seconds:"+seconds);
+    timeCount = setTimeout("startTime()",1000);
+}
+function stopTime() {
+    clearTimeout(timeCount);
+}
+
+/**
+ * show success notify
+ * ask if play again
+ */
+function showSuccess() {
+    if(confirm("恭喜通关成功，是否再玩一局？")){
+        restart();
+    }
+}
+
+/**
+ * check stars by moves
+ */
+function showStars() {
+    var startNum = 4-moves*3/2cars.length;
+    startNum=startNum<=1?1:startNum;
+    if($(".fa-star").length>startNum) {
+        $(".fa-star")[0].remove();
+    }
+}
+
+/**
+ * restart the game
+ * 
+ */
+function restart() {
+    moves=0;
+    openCards.length=0;
+    $(".deck").empty();
+    shuffle(cars).forEach(function (car) {
+        $(".deck").append($(car));
+    });
+    stopTime();
+    seconds=0;
+    startTime();
 }
 /*
  * set up the event listener for a refresh sign. If the sign is clicked:
@@ -91,10 +145,5 @@ function check() {
  *  - add each card's HTML to the page
  */
 $(".restart").on('click',function () {
-    moves=0;
-    openCards.length=0;
-    $(".deck").empty();
-    shuffle(cars).forEach(function (car) {
-        $(".deck").append($(car));
-    });
+   restart();
 });
