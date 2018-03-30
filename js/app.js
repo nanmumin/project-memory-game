@@ -116,7 +116,7 @@ function showSuccess() {
  * check stars by moves
  */
 function showStars() {
-    var startNum = 4-moves*3/2cars.length;
+    var startNum = 4-moves*3/2*cars.length;
     startNum=startNum<=1?1:startNum;
     if($(".fa-star").length>startNum) {
         $(".fa-star")[0].remove();
@@ -125,7 +125,7 @@ function showStars() {
 
 /**
  * restart the game
- * 
+ *
  */
 function restart() {
     moves=0;
